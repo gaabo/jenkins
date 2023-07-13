@@ -4,9 +4,7 @@ pipeline {
         stage('Ejecutar Pipeline con parámetros') {
             steps {
                 script {
-                    // Definir los parámetros para el job de tipo FreeStyle
                     def PORT = '8083'
-                    // Llamar al job de tipo FreeStyle con los parámetros definidos
                     build job: 'JavaWebAppParam', parameters: [
                         string(name: 'PORT', value: '8083')
                                             ]
@@ -15,8 +13,9 @@ pipeline {
         }
         stage('Ejecutar Pipeline sin parámetros') {
             steps {
-                // Llamar a la pipeline sin parámetros
-                build 'Daily shutdown containers'
+		script {
+                   build Job: 'JavaWebAppParam'
+		}
             }
         }
     }

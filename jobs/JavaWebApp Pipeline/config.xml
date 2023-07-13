@@ -1,0 +1,33 @@
+ <flow-definition plugin="workflow-job@1301.v054d9cea_9593">
+<actions>
+<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2133.ve46a_6113dfc3"/>
+<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2133.ve46a_6113dfc3">
+<jobProperties/>
+<triggers/>
+<parameters>
+<string>PORT</string>
+</parameters>
+<options/>
+</org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+</actions>
+<description>intentamos pasar el job de maven java web app a pipeline</description>
+<keepDependencies>false</keepDependencies>
+<properties>
+<hudson.model.ParametersDefinitionProperty>
+<parameterDefinitions>
+<hudson.model.StringParameterDefinition>
+<name>PORT</name>
+<description>Enter a value for named parameter</description>
+<defaultValue>8081</defaultValue>
+<trim>false</trim>
+</hudson.model.StringParameterDefinition>
+</parameterDefinitions>
+</hudson.model.ParametersDefinitionProperty>
+</properties>
+<definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3668.v1763b_b_6ccffd">
+<script>pipeline{ agent any tools { maven 'maven' jdk 'java' } parameters { string(name: 'PORT', defaultValue: '8081', description: 'Enter a value for named parameter') } stages{ stage('checkout'){ steps{ checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github access', url: 'https://github.com/rober29/demo-java.git']]]) } } stage('build'){ steps{ sh 'mvn clean install' } } } post { always { sh ''' echo "Esto es un echo del valor del puerto: $PORT" mkdir pkg cp target/*.war pkg/ docker build -t javademo:latest . docker run -d -p $PORT:8080 javademo:latest ''' cleanWs() } } }</script>
+<sandbox>true</sandbox>
+</definition>
+<triggers/>
+<disabled>false</disabled>
+</flow-definition>

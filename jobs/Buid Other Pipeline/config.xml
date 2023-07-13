@@ -1,0 +1,30 @@
+<flow-definition plugin="workflow-job@1301.v054d9cea_9593">
+<actions>
+<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2133.ve46a_6113dfc3"/>
+<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2133.ve46a_6113dfc3">
+<jobProperties/>
+<triggers/>
+<parameters/>
+<options/>
+</org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+</actions>
+<description>Este job tipo pipeline llama a otros dos jobs que ya fueron creados previamente: JavaWebApp y JavaWebApp conParametro</description>
+<keepDependencies>false</keepDependencies>
+<properties>
+<hudson.model.ParametersDefinitionProperty>
+<parameterDefinitions>
+<hudson.model.StringParameterDefinition>
+<name>PORT</name>
+<defaultValue>8083</defaultValue>
+<trim>false</trim>
+</hudson.model.StringParameterDefinition>
+</parameterDefinitions>
+</hudson.model.ParametersDefinitionProperty>
+</properties>
+<definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3668.v1763b_b_6ccffd">
+<script>pipeline { agent any stages { stage('Ejecutar Pipeline con parámetros') { steps { script { def PORT = '8083' build job: 'JavaWebApp conParametro', parameters: [ string(name: 'PORT', value: '8083') ] } } } stage('Ejecutar Pipeline sin parámetros') { steps { script { build Job: 'JavaWebApp' } } } } } </script>
+<sandbox>true</sandbox>
+</definition>
+<triggers/>
+<disabled>false</disabled>
+</flow-definition>
